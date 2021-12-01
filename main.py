@@ -30,7 +30,19 @@ if __name__ == '__main__':
 
 
 def parse_cookie(query: str) -> dict:
-    return {}
+    my_dict = dict()
+    my_query = query.split(';')  # сплитим входную строку по ;
+    for i in my_query:  # перебираем и сплитим по первому вхождению = записывая в словарь ключ значения
+        temp = i.split('=', 1)
+        try:
+            my_dict[temp[0]] = temp[1]
+        except IndexError:
+            continue
+    res = {k: v for k, v in my_dict.items() if k}  # исключаем возможность пустых ключей
+    return res
+
+
+print(parse_cookie('name=Dima;age=28;'))
 
 
 if __name__ == '__main__':
@@ -38,3 +50,7 @@ if __name__ == '__main__':
     assert parse_cookie('') == {}
     assert parse_cookie('name=Dima;age=28;') == {'name': 'Dima', 'age': '28'}
     assert parse_cookie('name=Dima=User;age=28;') == {'name': 'Dima=User', 'age': '28'}
+    assert parse_cookie('name=Dima=User;age=28;;') == {'name': 'Dima=User', 'age': '28'}
+    assert parse_cookie('name=Dima=User;;age=28;;') == {'name': 'Dima=User', 'age': '28'}
+    assert parse_cookie('dfvdfsdsds') == {}
+
